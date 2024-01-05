@@ -53,7 +53,7 @@
                                 <td>New task 2</td>
                                 <td>Test 2</td>
                                 <td>
-                                    <button class="btn btn-sm btn-primary">
+                                    <button type="button" class="btn btn-sm btn-primary" data-bs-toggle="modal" data-bs-target="#task">
                                         open
                                     </button>
                                 </td>
@@ -66,14 +66,15 @@
     </div>
 </div>
 
+{{-- NEW TASK --}}
 <div class="modal fade" id="newTask">
     <div class="modal-dialog modal-dialog-centered modal-sm">
         <div class="modal-content">
 
             <!-- Modal Header -->
             <div class="modal-header">
-                <h4 class="modal-title">Modal Heading</h4>
-                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                <h4 class="modal-title">New Task</h4>
+                {{-- <button type="button" class="btn-close" data-bs-dismiss="modal"></button> --}}
             </div>
 
             <!-- Modal body -->
@@ -89,4 +90,31 @@
         </div>
     </div>
 </div>
+{{-- NEW TASK --}}
+
+{{-- TASK --}}
+<div class="modal fade" id="task">
+    <div class="modal-dialog modal-dialog-centered modal-sm">
+        <div class="modal-content">
+
+            <!-- Modal Header -->
+            <div class="modal-header">
+                <h4 class="modal-title">Task</h4>
+                {{-- <button type="button" class="btn-close" data-bs-dismiss="modal"></button> --}}
+            </div>
+
+            <!-- Modal body -->
+            <div class="modal-body">
+                Modal body..
+            </div>
+
+            <!-- Modal footer -->
+            <div class="modal-footer">
+                <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Close</button>
+            </div>
+
+        </div>
+    </div>
+</div>
+{{-- TASK --}}
 @endsection
