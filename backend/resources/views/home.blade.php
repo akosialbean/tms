@@ -23,7 +23,10 @@
                 </div>
 
                 <div class="card-body">
-                    <table class="table table-responsive table-sm">
+                    <button type="button" class="btn btn-sm btn-success" data-bs-toggle="modal" data-bs-target="#newTask">
+                        New Task
+                    </button>
+                    <table class="table table-responsive table-sm table-bordered table-striped table-hover">
                         <thead>
                             <th>
                                 <tr>
@@ -45,10 +48,44 @@
                                     </button>
                                 </td>
                             </tr>
+                            <tr>
+                                <td>2</td>
+                                <td>New task 2</td>
+                                <td>Test 2</td>
+                                <td>
+                                    <button class="btn btn-sm btn-primary">
+                                        open
+                                    </button>
+                                </td>
+                            </tr>
                         </tbody>
                     </table>
                 </div>
             </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="newTask">
+    <div class="modal-dialog modal-dialog-centered modal-sm">
+        <div class="modal-content">
+
+            <!-- Modal Header -->
+            <div class="modal-header">
+                <h4 class="modal-title">Modal Heading</h4>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+
+            <!-- Modal body -->
+            <div class="modal-body">
+                Modal body..
+            </div>
+
+            <!-- Modal footer -->
+            <div class="modal-footer">
+                <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Close</button>
+            </div>
+
         </div>
     </div>
 </div>
