@@ -37,8 +37,9 @@ class HomeController extends Controller
         }else{
             $task = DB::table('tasks')
             ->join('users', 'tasks.t_assignedto', '=', 'users.id')
-            ->select('tasks.*', 'users.id')
+            ->select('tasks.*')
             ->where('tasks.t_assignedto', '=', Auth::user()->id)
+            ->orderby('tasks.id', 'desc')
             ->paginate(6);
         }
         
@@ -93,11 +94,30 @@ class HomeController extends Controller
 
         $task = $request->validate([
             'id' => ['required'],
+            't_title' => ['required'],
+            't_description' => ['required'],
+            't_assignedto' => ['required'],
+            't_assignedtoname',
+            't_assignedby',
+            't_assignedbyname',
             't_remarks' => ['required'],
             't_status' => ['required'],
         ]);
+
+        $assignedto = DB::table('users')
+        ->select('name')
+        ->where('id', '=', $task['t_assignedto'])
+        ->first();
+    
+        $assignedby = DB::table('users')
+        ->select('name')
+        ->where('id', '=', Auth::user()->id)
+        ->first();
     
         $task['updated_at'] = now();
+        $task['t_assignedtoname'] = $assignedto->name;
+        $task['t_assignedby'] = Auth::user()->id;
+        $task['t_assignedbyname'] = $assignedby->name;
     
         $taskToUpdate = Task::find($task['id']);
         $save = $taskToUpdate->update($task);

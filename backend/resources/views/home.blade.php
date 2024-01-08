@@ -28,11 +28,9 @@
 
                 <div class="card-body">
                     @if(Auth::check())
-                        @if(Auth::user()->role == 1)
-                            <button type="button" class="btn btn-sm btn-primary" data-bs-toggle="modal" data-bs-target="#newTask">
-                                New Task
-                            </button>
-                        @endif
+                        <button type="button" class="btn btn-sm btn-primary" data-bs-toggle="modal" data-bs-target="#newTask">
+                            New Task
+                        </button>
                     @endif
 
                     <table class="table table-responsive table-lg table-striped table-hover mt-3">
@@ -52,7 +50,15 @@
                         <tbody>
                             @if(Auth::check())
                                 @foreach($tasks as $task)
-                                <tr>
+                                <tr
+                                    @if($task->t_status == 1)
+                                        class="table-primary"
+                                    @elseif($task->t_status == 2)
+                                        class="table-warning"
+                                    @else
+                                        class="table-secondary"
+                                    @endif
+                                >
                                     <td class="text-center">{{$task->id}}</td>
                                     <td class="text-center">{{$task->t_title}}</td>
                                     @if(Auth::user()->role == 1)
@@ -112,10 +118,10 @@
                     </div>
 
                     <div class="row mb-3">
-                        <label for="t_assignedto" class="col-md-4 col-form-label text-md-end">{{ __('Assign to (Optional)') }}</label>
+                        <label for="t_assignedto" class="col-md-4 col-form-label text-md-end">{{ __('Assign to (Required)') }}</label>
 
                         <div class="col-md-6">
-                            <select name="t_assignedto" id="t_assignedto" class="form-select">
+                            <select name="t_assignedto" id="t_assignedto" class="form-select" required>
                                 <option value="">--</option>
                                 @if(Auth::check())
                                     @foreach($users as $user)
@@ -161,7 +167,7 @@
                         <label for="t_title" class="col-md-4 col-form-label text-md-end">{{ __('Title *') }}</label>
 
                         <div class="col-md-6">
-                            <input id="t_title" type="text" class="form-control" name="t_title" value="{{$task->t_title}}" disabled>
+                            <input id="t_title" type="text" class="form-control" name="t_title" value="{{$task->t_title}}" >
                         </div>
                     </div>
 
@@ -169,28 +175,22 @@
                         <label for="t_description" class="col-md-4 col-form-label text-md-end">{{ __('Description *') }}</label>
 
                         <div class="col-md-6">
-                            <textarea id="t_description" type="text" class="form-control" name="t_description" disabled>{{$task->t_description}}</textarea>
+                            <textarea id="t_description" type="text" class="form-control" name="t_description">{{$task->t_description}}</textarea>
                         </div>
                     </div>
 
                     <div class="row mb-3">
-                        <label for="t_assignedby" class="col-md-4 col-form-label text-md-end">{{ __('Assign by') }}</label>
+                        <label for="t_assignedto" class="col-md-4 col-form-label text-md-end">{{ __('Assign to (Required)') }}</label>
 
                         <div class="col-md-6">
-                            @if(Auth::user()->role == 2)
-                                <select name="t_assignedto" id="t_assignedto" class="form-select">
-                                    <option value="">--</option>
-                                    @if(Auth::check())
-                                        @foreach($users as $user)
-                                            <option value="{{$user->id}}">{{$user->name}}</option>
-                                        @endforeach
-                                    @endif
-                                </select>
-                            @elseif(Auth::user()->role == 1)
-                                <div class="col-md-12">
-                                    <input id="t_title" type="text" class="form-control" name="t_title" value="{{$task->t_assignedbyname}}" disabled>
-                                </div>
-                            @endif
+                            <select name="t_assignedto" id="t_assignedto" class="form-select" required>
+                                <option value="{{$task->t_assignedto}}">{{$task->t_assignedtoname}}</option>
+                                @if(Auth::check())
+                                    @foreach($users as $user)
+                                        <option value="{{$user->id}}">{{$user->name}}</option>
+                                    @endforeach
+                                @endif
+                            </select>
                         </div>
                     </div>
 
