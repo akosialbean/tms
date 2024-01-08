@@ -37,7 +37,7 @@ class HomeController extends Controller
         }else{
             $task = DB::table('tasks')
             ->join('users', 'tasks.t_assignedto', '=', 'users.id')
-            ->select('tasks.*', 'user.id')
+            ->select('tasks.*', 'users.id')
             ->where('tasks.t_assignedto', '=', Auth::user()->id)
             ->paginate(6);
         }
@@ -86,4 +86,27 @@ class HomeController extends Controller
             return redirect('/home')->with('message', 'Failed to create task');
         }
     }
+
+    public function updatetask(Request $request){
+
+        // dd($request); 
+
+        $task = $request->validate([
+            'id' => ['required'],
+            't_remarks' => ['required'],
+            't_status' => ['required'],
+        ]);
+    
+        $task['updated_at'] = now();
+    
+        $taskToUpdate = Task::find($task['id']);
+        $save = $taskToUpdate->update($task);
+    
+        if($save){
+            return redirect('/home')->with('message', 'Task updated');
+        }else{
+            return redirect('/home')->with('message', 'Failed to update task');
+        }
+    }
+    
 }

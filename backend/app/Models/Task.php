@@ -22,6 +22,7 @@ class Task extends Model
         't_assignedtoname',
         't_assignedby',
         't_assignedbyname',
+        't_remarks',
     ];
 
 }

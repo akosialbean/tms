@@ -20,6 +20,7 @@ return new class extends Migration
             $table->string('t_assignedtoname')->default('Unassigned');
             $table->integer('t_assignedby')->references('id')->on('users')->default(0);
             $table->string('t_assignedbyname')->default(0);
+            $table->string('t_remarks')->default(0);
             $table->timestamps();
         });
     }

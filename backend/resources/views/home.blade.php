@@ -155,6 +155,8 @@
             <div class="modal-body">
                 <form action="/updatetask" method="post">
                     @csrf
+                    @method('PATCH')
+                    <input type="hidden" name="id" id="id" value="{{$task->id}}">
                     <div class="row mb-3">
                         <label for="t_title" class="col-md-4 col-form-label text-md-end">{{ __('Title *') }}</label>
 
@@ -196,15 +198,15 @@
                         <label for="t_remarks" class="col-md-4 col-form-label text-md-end">{{ __('Remarks *') }}</label>
 
                         <div class="col-md-6">
-                            <textarea id="t_remarks" type="text" class="form-control" name="t_remarks">{{$task->t_description}}</textarea>
+                            <textarea id="t_remarks" type="text" class="form-control" name="t_remarks">{{$task->t_remarks}}</textarea>
                         </div>
                     </div>
 
                     <div class="row mb-3">
-                        <label for="t_remarks" class="col-md-4 col-form-label text-md-end">{{ __('Mark as *') }}</label>
+                        <label for="t_status" class="col-md-4 col-form-label text-md-end">{{ __('Status *') }}</label>
 
                         <div class="col-md-6">
-                            <select name="t_assignedto" id="t_assignedto" class="form-select">
+                            <select name="t_status" id="t_status" class="form-select">
                                 @if(Auth::check())
                                     <option value="{{$task->t_status}}">
                                         @if($task->t_status === 1)
@@ -217,13 +219,17 @@
                                     </option>
                                 @endif
                                 <option value="2">Ongoing</option>
-                                <option value="2">Done</option>
+                                <option value="3">Done</option>
                             </select>
                         </div>
                     </div>
 
-                    <button type="submit" class="btn btn-sm btn-success float-end">Save</button>
+                    <button type="submit" class="btn btn-sm btn-success float-end" {{$task->t_status == 3 ? "disabled" : ""}}>Save</button>
                 </form>
+
+                    @if(Auth::user()->role == 1)
+                        <button type="submit" class="btn btn-sm btn-danger float-end me-1" {{Auth::user()->role == 1 ? "" : "disabled"}}>Delete</button>
+                    @endif
             </div>
 
             <!-- Modal footer -->
