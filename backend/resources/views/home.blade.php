@@ -62,7 +62,7 @@
                                     @endif
                                     <td class="text-center">{{$task->created_at}}</td>
                                     <td class="text-center">
-                                        <button class="btn btn-sm btn-info">
+                                        <button type="button" class="btn btn-sm btn-info" data-bs-toggle="modal" data-bs-target="#task{{$task->id}}">
                                             view
                                         </button>
                                     </td>
@@ -140,25 +140,90 @@
 {{-- NEW TASK --}}
 
 {{-- TASK --}}
-<div class="modal fade" id="task">
-    <div class="modal-dialog modal-dialog-centered modal-sm">
+@foreach($tasks as $task)
+<div class="modal fade" id="task{{$task->id}}">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
         <div class="modal-content">
 
             <!-- Modal Header -->
             <div class="modal-header">
-                <h4 class="modal-title">Task</h4>
+                <h4 class="modal-title">Task #{{$task->id}}</h4>
                 {{-- <button type="button" class="btn-close" data-bs-dismiss="modal"></button> --}}
             </div>
 
             <!-- Modal body -->
             <div class="modal-body">
-                <div class="row mb-3">
-                    <label for="password-confirm" class="col-md-4 col-form-label text-md-end">{{ __('Confirm Password') }}</label>
+                <form action="/updatetask" method="post">
+                    @csrf
+                    <div class="row mb-3">
+                        <label for="t_title" class="col-md-4 col-form-label text-md-end">{{ __('Title *') }}</label>
 
-                    <div class="col-md-6">
-                        <input id="password-confirm" type="password" class="form-control" name="password_confirmation" required autocomplete="new-password">
+                        <div class="col-md-6">
+                            <input id="t_title" type="text" class="form-control" name="t_title" value="{{$task->t_title}}" disabled>
+                        </div>
                     </div>
-                </div>
+
+                    <div class="row mb-3">
+                        <label for="t_description" class="col-md-4 col-form-label text-md-end">{{ __('Description *') }}</label>
+
+                        <div class="col-md-6">
+                            <textarea id="t_description" type="text" class="form-control" name="t_description" disabled>{{$task->t_description}}</textarea>
+                        </div>
+                    </div>
+
+                    <div class="row mb-3">
+                        <label for="t_assignedby" class="col-md-4 col-form-label text-md-end">{{ __('Assign by') }}</label>
+
+                        <div class="col-md-6">
+                            @if(Auth::user()->role == 2)
+                                <select name="t_assignedto" id="t_assignedto" class="form-select">
+                                    <option value="">--</option>
+                                    @if(Auth::check())
+                                        @foreach($users as $user)
+                                            <option value="{{$user->id}}">{{$user->name}}</option>
+                                        @endforeach
+                                    @endif
+                                </select>
+                            @elseif(Auth::user()->role == 1)
+                                <div class="col-md-12">
+                                    <input id="t_title" type="text" class="form-control" name="t_title" value="{{$task->t_assignedbyname}}" disabled>
+                                </div>
+                            @endif
+                        </div>
+                    </div>
+
+                    <div class="row mb-3">
+                        <label for="t_remarks" class="col-md-4 col-form-label text-md-end">{{ __('Remarks *') }}</label>
+
+                        <div class="col-md-6">
+                            <textarea id="t_remarks" type="text" class="form-control" name="t_remarks">{{$task->t_description}}</textarea>
+                        </div>
+                    </div>
+
+                    <div class="row mb-3">
+                        <label for="t_remarks" class="col-md-4 col-form-label text-md-end">{{ __('Mark as *') }}</label>
+
+                        <div class="col-md-6">
+                            <select name="t_assignedto" id="t_assignedto" class="form-select">
+                                @if(Auth::check())
+                                    <option value="{{$task->t_status}}">
+                                        @if($task->t_status === 1)
+                                            New
+                                        @elseif($task->t_status == 2)
+                                            Ongoing
+                                        @else
+                                            Done
+                                        @endif
+                                    </option>
+                                @endif
+                                <option value="2">Ongoing</option>
+                                <option value="2">Done</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <button type="submit" class="btn btn-sm btn-success float-end">Save</button>
+                </form>
             </div>
 
             <!-- Modal footer -->
@@ -169,5 +234,7 @@
         </div>
     </div>
 </div>
+@endforeach
 {{-- TASK --}}
+
 @endsection
