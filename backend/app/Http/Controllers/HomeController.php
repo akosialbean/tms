@@ -108,5 +108,23 @@ class HomeController extends Controller
             return redirect('/home')->with('message', 'Failed to update task');
         }
     }
+
+    public function deletetask(Request $request){
+        $task = $request->validate([
+            'id' => ['required'],
+            'updated_at'
+        ]);
+
+        $task['updated_at'] = now();
+
+        $taskToDelete = Task::find($task['id']);
+        $save = $taskToDelete->delete($task);
+
+        if($save){
+            return redirect('/home')->with('message', 'Task deleted');
+        }else{
+            return redirect('/home')->with('message', 'Failed to delete task');
+        }
+    }
     
 }

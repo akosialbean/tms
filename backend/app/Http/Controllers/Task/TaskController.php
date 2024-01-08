@@ -45,5 +45,6 @@ class TaskController extends Controller
             return redirect('/home')->with('message', 'Failed to create task');
         }
     }
+
     
 }

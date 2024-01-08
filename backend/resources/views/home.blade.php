@@ -228,7 +228,12 @@
                 </form>
 
                     @if(Auth::user()->role == 1)
-                        <button type="submit" class="btn btn-sm btn-danger float-end me-1" {{Auth::user()->role == 1 ? "" : "disabled"}}>Delete</button>
+                        <form action='/deletetask' method='POST'>
+                            @csrf
+                            @method('DELETE')
+                            <input type="hidden" name="id" value="{{$task->id}}">
+                            <button type="submit" class="btn btn-sm btn-danger float-end me-1" {{Auth::user()->role == 1 ? "" : "disabled"}}>Delete</button>
+                        </form>
                     @endif
             </div>
 

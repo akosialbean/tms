@@ -24,3 +24,4 @@ Auth::routes();
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
 Route::post('/newtask', [App\Http\Controllers\HomeController::class, 'newtask'])->name('newtask');
 Route::patch('/updatetask', [App\Http\Controllers\HomeController::class, 'updatetask'])->name('updatetask');
+Route::delete('/deletetask', [App\Http\Controllers\HomeController::class, 'deletetask'])->name('deletetask');
