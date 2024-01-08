@@ -14,11 +14,7 @@
                         </div>
                     @endif
 
-                    @if (Auth::user()->role === 1)
-                        <strong>Admin</strong>
-                    @else
-                        <strong>User</strong>
-                    @endif
+                    User1   
                     {{ Auth::user()->name }} {{ __('is logged in!') }}
                 </div>
 

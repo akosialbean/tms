@@ -19,7 +19,9 @@ class Task extends Model
         't_description',
         't_status',
         't_assignedto',
+        't_assignedtoname',
         't_assignedby',
+        't_assignedbyname',
     ];
 
 }

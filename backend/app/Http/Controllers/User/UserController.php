@@ -8,7 +8,7 @@ use App\Models\User;
 
 class UserController extends Controller
 {
-    public function getUsers(){
-        $data = User::orderby('name', 'asc');
+    public function index(){
+        return view('user.home');
     }
 }

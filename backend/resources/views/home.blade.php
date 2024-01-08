@@ -3,7 +3,7 @@
 @section('content')
 <div class="container">
     <div class="row justify-content-center">
-        <div class="col-md-8">
+        <div class="col-md-12">
             <div class="card">
                 <div class="card-header">
                     {{ __('Tasks') }}
@@ -14,52 +14,66 @@
                         </div>
                     @endif
 
-                    @if (Auth::user()->role === 1)
-                        <strong>Admin</strong>
-                    @else
-                        <strong>User</strong>
+                    @if(Auth::check())
+                        @if (Auth::user()->role === 1)
+                            <strong>Admin</strong>
+                        @else
+                            <strong>User</strong>
+                        @endif
+
+                        {{ Auth::user()->name }} {{ __('is logged in!') }}
                     @endif
-                    {{ Auth::user()->name }} {{ __('is logged in!') }}
+
                 </div>
 
                 <div class="card-body">
-                    <button type="button" class="btn btn-sm btn-success" data-bs-toggle="modal" data-bs-target="#newTask">
-                        New Task
-                    </button>
-                    <table class="table table-responsive table-sm table-bordered table-striped table-hover">
+                    @if(Auth::check())
+                        @if(Auth::user()->role == 1)
+                            <button type="button" class="btn btn-sm btn-primary" data-bs-toggle="modal" data-bs-target="#newTask">
+                                New Task
+                            </button>
+                        @endif
+                    @endif
+
+                    <table class="table table-responsive table-lg table-striped table-hover mt-3">
                         <thead>
-                            <th>
-                                <tr>
-                                    <td>#</td>
-                                    <td>Title</td>
-                                    <td>Assigned to</td>
-                                    <td>Actions</td>
-                                </tr>
-                            </th>
+                            <tr>
+                                <th class="text-center">#</th>
+                                <th class="text-center">Title</th>
+                                @if(Auth::user()->role == 1)
+                                    <th class="text-center">Assigned to</th>
+                                @elseif(Auth::user()->role == 2)
+                                    <th class="text-center">Assigned by</th>
+                                @endif
+                                <th class="text-center">Date Created</th>
+                                <th class="text-center">Actions</th>
+                            </tr>
                         </thead>
                         <tbody>
-                            <tr>
-                                <td>1</td>
-                                <td>New task 1</td>
-                                <td>Test 3</td>
-                                <td>
-                                    <button class="btn btn-sm btn-primary">
-                                        open
-                                    </button>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>2</td>
-                                <td>New task 2</td>
-                                <td>Test 2</td>
-                                <td>
-                                    <button type="button" class="btn btn-sm btn-primary" data-bs-toggle="modal" data-bs-target="#task">
-                                        open
-                                    </button>
-                                </td>
-                            </tr>
+                            @if(Auth::check())
+                                @foreach($tasks as $task)
+                                <tr>
+                                    <td class="text-center">{{$task->id}}</td>
+                                    <td class="text-center">{{$task->t_title}}</td>
+                                    @if(Auth::user()->role == 1)
+                                        <td class="text-center">{{$task->t_assignedtoname}}</td>
+                                    @elseif(Auth::user()->role == 2)
+                                        <td class="text-center">{{$task->t_assignedbyname}}</td>
+                                    @endif
+                                    <td class="text-center">{{$task->created_at}}</td>
+                                    <td class="text-center">
+                                        <button class="btn btn-sm btn-info">
+                                            view
+                                        </button>
+                                    </td>
+                                </tr>
+                                @endforeach
+                            @endif
                         </tbody>
                     </table>
+                    @if(Auth::check())
+                        {{$tasks->onEachSide(0)->links()}}
+                    @endif
                 </div>
             </div>
         </div>
@@ -79,33 +93,40 @@
 
             <!-- Modal body -->
             <div class="modal-body">
-                <div class="row mb-3">
-                    <label for="taskTitle" class="col-md-4 col-form-label text-md-end">{{ __('Title *') }}</label>
+                <form action="/newtask" method="post">
+                    @csrf
+                    <div class="row mb-3">
+                        <label for="t_title" class="col-md-4 col-form-label text-md-end">{{ __('Title *') }}</label>
 
-                    <div class="col-md-6">
-                        <input id="taskTitle" type="text" class="form-control" name="t_title" required>
+                        <div class="col-md-6">
+                            <input id="t_title" type="text" class="form-control" name="t_title" required>
+                        </div>
                     </div>
-                </div>
 
-                <div class="row mb-3">
-                    <label for="taskDescription" class="col-md-4 col-form-label text-md-end">{{ __('Description *') }}</label>
+                    <div class="row mb-3">
+                        <label for="t_description" class="col-md-4 col-form-label text-md-end">{{ __('Description *') }}</label>
 
-                    <div class="col-md-6">
-                        <textarea id="taskDescription" type="text" class="form-control" name="t_description" required></textarea>
+                        <div class="col-md-6">
+                            <textarea id="t_description" type="text" class="form-control" name="t_description" required></textarea>
+                        </div>
                     </div>
-                </div>
 
-                <div class="row mb-3">
-                    <label for="password-confirm" class="col-md-4 col-form-label text-md-end">{{ __('Assign to (Optional)') }}</label>
+                    <div class="row mb-3">
+                        <label for="t_assignedto" class="col-md-4 col-form-label text-md-end">{{ __('Assign to (Optional)') }}</label>
 
-                    <div class="col-md-6">
-                        <select name="role" id="" class="form-select">
-                            <option value="">--</option>
-                            <option value="1">Admin</option>
-                            <option value="2">User</option>
-                        </select>
+                        <div class="col-md-6">
+                            <select name="t_assignedto" id="t_assignedto" class="form-select">
+                                <option value="">--</option>
+                                @if(Auth::check())
+                                    @foreach($users as $user)
+                                        <option value="{{$user->id}}">{{$user->name}}</option>
+                                    @endforeach
+                                @endif
+                            </select>
+                        </div>
                     </div>
-                </div>
+                    <button type="submit" class="btn btn-sm btn-success float-end">Save</button>
+                </form>
             </div>
 
             <!-- Modal footer -->

@@ -15,9 +15,11 @@ return new class extends Migration
             $table->id();
             $table->string('t_title');
             $table->string('t_description');
-            $table->integer('t_status');
+            $table->integer('t_status')->default(0);
             $table->integer('t_assignedto')->references('id')->on('users')->default(0);
+            $table->string('t_assignedtoname')->default('Unassigned');
             $table->integer('t_assignedby')->references('id')->on('users')->default(0);
+            $table->string('t_assignedbyname')->default(0);
             $table->timestamps();
         });
     }
